@@ -2,8 +2,15 @@ package com.acdevs.themoviedb.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.acdevs.themoviedb.Movies
+import com.acdevs.themoviedb.Results
 import com.acdevs.themoviedb.remote.HttpRepository
+import com.acdevs.themoviedb.utils.UserSource
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -15,6 +22,10 @@ class HomeViewModel: ViewModel() {
 
     private val _topRatedMoviesData = MutableStateFlow<Movies?>(null)
     val topRatedMoviesData = _topRatedMoviesData.asStateFlow()
+
+    val movie: Flow<PagingData<Results>> = Pager(PagingConfig(pageSize = 6)) {
+        UserSource()
+    }.flow.cachedIn(viewModelScope)
 
     init {
         viewModelScope.launch {

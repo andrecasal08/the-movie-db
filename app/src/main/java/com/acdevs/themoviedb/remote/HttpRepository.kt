@@ -29,7 +29,7 @@ class HttpRepository {
         return httpClient.get("https://api.themoviedb.org/3/movie/popular?api_key=${Keys().moviesApiKey}&language=en-US&page=1").body()
     }
 
-    suspend fun getTopRatedMovies(): Movies {
+    suspend fun getTopRatedMovies(page: Int=1): Movies {
         val httpClient = HttpClient(Android) {
             install(Logging) {
                 level = LogLevel.ALL
@@ -40,6 +40,6 @@ class HttpRepository {
                 })
             }
         }
-        return httpClient.get("https://api.themoviedb.org/3/movie/top_rated?api_key=${Keys().moviesApiKey}&language=en-US&page=1").body()
+        return httpClient.get("https://api.themoviedb.org/3/movie/top_rated?api_key=${Keys().moviesApiKey}&language=en-US&page=${page}").body()
     }
 }
