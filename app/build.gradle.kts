@@ -88,4 +88,7 @@ dependencies {
     val nav_version = "2.7.7"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    // Google Fonts
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.8")
 }
