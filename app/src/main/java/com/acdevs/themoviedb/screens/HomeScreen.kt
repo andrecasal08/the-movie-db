@@ -1,5 +1,6 @@
 package com.acdevs.themoviedb.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,34 +42,60 @@ import com.acdevs.themoviedb.viewmodels.HomeViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlin.math.round
 
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel,
-               modifier: Modifier = Modifier.fillMaxSize(), navController: NavController) {
+fun HomeScreen(modifier: Modifier = Modifier.fillMaxSize(),
+               viewModel: HomeViewModel, navController: NavController) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(0.dp, 30.dp, 0.dp, 0.dp)
+    val movieListItems: LazyPagingItems<Results> = viewModel.topRatedMovies.collectAsLazyPagingItems()
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Text(text = "Popular Movies",
-            modifier = Modifier.padding(16.dp, 30.dp, 0.dp, 0.dp),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(20.dp))
+        item {
+            Row (
+                modifier = Modifier
+                    .padding(16.dp, 30.dp, 0.dp, 0.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(text = "The Movie TB", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            }
+        }
 
-        PopularMovies(movies = viewModel.popularMovies, navController = navController)
+        item {
+            Text(text = "Popular Movies",
+                modifier = Modifier.padding(16.dp, 30.dp, 0.dp, 0.dp),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Text(text = "Top Rated Movies", modifier = Modifier.padding(16.dp, 30.dp, 0.dp, 0.dp),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold)
+            PopularMovies(movies = viewModel.popularMovies, navController = navController)
+        }
 
-        Spacer(modifier = Modifier.height(20.dp))
-        TopRatedMovies(movies = viewModel.topRatedMovies, navController = navController)
+        item {
+            Text(text = "Top Rated Movies", modifier = Modifier.padding(16.dp, 30.dp, 0.dp, 0.dp),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold)
+
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+
+        // Displaying top rated movies
+        items(
+            count = movieListItems.itemCount,
+            key = movieListItems.itemKey{movie -> movie.title},
+            contentType = movieListItems.itemContentType { movie -> "movie" }
+        ) {
+                index ->
+            val movie = movieListItems[index]
+            if (movie != null) {
+                TopRatedMoviesCard(movie = movie, navController = navController)
+            }
+        }
     }
-
 }
 
 @Composable
