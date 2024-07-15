@@ -2,10 +2,12 @@ package com.acdevs.themoviedb.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -18,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -40,76 +43,47 @@ import kotlinx.coroutines.flow.Flow
 fun HomeScreen(viewModel: HomeViewModel,
                modifier: Modifier = Modifier.fillMaxSize()) {
 
-    val popularMoviesData = viewModel.popularMoviesData.collectAsState()
-    val topRatedMoviesData = viewModel.topRatedMoviesData.collectAsState()
-
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(0.dp, 30.dp, 0.dp, 0.dp)
     ) {
         Text(text = "Popular Movies",
             modifier = Modifier.padding(16.dp, 30.dp, 0.dp, 0.dp),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(20.dp))
 
-        PopularMovies(popularMoviesData = popularMoviesData.value?.results ?: emptyList())
+        PopularMovies(movies = viewModel.popularMovies)
 
         Text(text = "Top Rated Movies", modifier = Modifier.padding(16.dp, 30.dp, 0.dp, 0.dp),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold)
 
-
-        TopRatedMovies(topRatedMoviesList = topRatedMoviesData.value?.results ?: emptyList(), movies = viewModel.movie)
+        Spacer(modifier = Modifier.height(20.dp))
+        TopRatedMovies(movies = viewModel.topRatedMovies)
     }
 
 }
 
 @Composable
-fun PopularMovies(modifier: Modifier = Modifier, popularMoviesData: List<Results>) {
+fun PopularMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Results>>) {
+    val movieListItems: LazyPagingItems<Results> = movies.collectAsLazyPagingItems()
     LazyRow {
-        popularMoviesData.forEach { movie ->
-            item {
-                Card(
-                    modifier = Modifier.padding(16.dp, 15.dp, 0.dp, 0.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Transparent
-                    ),
-                    onClick = {
-
-                    },
-
-                    ) {
-                    Column {
-                        AsyncImage(
-                            model = "https://image.tmdb.org/t/p/original/${movie.posterPath}",
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .width(150.dp)
-                                .height(200.dp),
-                            contentScale = ContentScale.FillBounds,
-                        )
-                        Text(text = movie.title, maxLines = 2,
-                            modifier = Modifier
-                                .width(150.dp)
-                                .padding(5.dp))
-                        Row(
-                            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp),
-                        ) {
-                            Icon(imageVector = Icons.Outlined.Star, contentDescription = null)
-                            Text(text = "8.4/10 IMDB",
-                                modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Normal)
-                        }
-                    }
-                }
+        items(
+            count = movieListItems.itemCount,
+            key = movieListItems.itemKey{movie -> movie.title},
+            contentType = movieListItems.itemContentType { movie -> "movie" }
+        ) {
+                index ->
+            val movie = movieListItems[index]
+            if (movie != null) {
+                PopularMoviesCard(movie = movie)
             }
         }
     }
 }
 
 @Composable
-fun TopRatedMovies(modifier: Modifier = Modifier, topRatedMoviesList: List<Results>, movies: Flow<PagingData<Results>>) {
+fun TopRatedMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Results>>) {
     val movieListItems: LazyPagingItems<Results> = movies.collectAsLazyPagingItems()
 
   LazyColumn {
@@ -121,60 +95,55 @@ fun TopRatedMovies(modifier: Modifier = Modifier, topRatedMoviesList: List<Resul
           index ->
           val movie = movieListItems[index]
           if (movie != null) {
-              MovieData(movie = movie)
+              TopRatedMoviesCard(movie = movie)
           }
       }
   }
-
-    /*LazyColumn {
-        topRatedMoviesList.forEach { movie ->
-            item {
-                Card(
-                    modifier = Modifier
-                        .padding(16.dp, 15.dp, 16.dp, 0.dp)
-                        .fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Transparent
-                    ),
-                    onClick = {
-
-                    },
-
-                    ) {
-                    Row {
-                        AsyncImage(
-                            model = "https://image.tmdb.org/t/p/original/${movie.posterPath}",
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(150.dp)
-                                .height(200.dp),
-                            contentScale = ContentScale.FillBounds,
-                        )
-
-                        Column {
-                            Text(text = movie.title, maxLines = 2,
-                                modifier = Modifier
-                                    .width(150.dp)
-                                    .padding(5.dp))
-                            Row(
-                                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp),
-                            ) {
-                                Icon(imageVector = Icons.Outlined.Star, contentDescription = null)
-                                Text(text = "8.4/10 IMDB",
-                                    modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Normal)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }*/
 }
 
 @Composable
-fun MovieData(movie: Results) {
+fun PopularMoviesCard(modifier: Modifier = Modifier, movie: Results) {
+    Card(
+        modifier = Modifier.padding(16.dp, 15.dp, 16.dp, 0.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        onClick = {
+
+        },
+
+        ) {
+        Column {
+            AsyncImage(
+                model = "https://image.tmdb.org/t/p/original/${movie.posterPath}",
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .width(150.dp)
+                    .height(200.dp),
+                contentScale = ContentScale.FillBounds,
+            )
+            Text(text = movie.title, fontSize = 16.sp, fontWeight = FontWeight.Bold, maxLines = 3,
+                modifier = Modifier
+                    .width(150.dp)
+                    .padding(5.dp))
+            Row(
+                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(imageVector = Icons.Outlined.Star, contentDescription = null,
+                    modifier = Modifier.size(15.dp))
+                Text(text = "8.4/10 IMDB",
+                    modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal)
+            }
+        }
+    }
+}
+
+@Composable
+fun TopRatedMoviesCard(movie: Results) {
     Card(
         modifier = Modifier
             .padding(16.dp, 15.dp, 16.dp, 0.dp)
@@ -187,7 +156,8 @@ fun MovieData(movie: Results) {
         },
 
         ) {
-        Row {
+        Row(
+        ) {
             AsyncImage(
                 model = "https://image.tmdb.org/t/p/original/${movie.posterPath}",
                 contentDescription = null,
@@ -197,18 +167,22 @@ fun MovieData(movie: Results) {
                 contentScale = ContentScale.FillBounds,
             )
 
-            Column {
-                Text(text = movie.title, maxLines = 2,
+            Column(
+                modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
+            ) {
+                Text(text = movie.title, fontSize = 16.sp, fontWeight = FontWeight.Bold, maxLines = 3,
                     modifier = Modifier
                         .width(150.dp)
                         .padding(5.dp))
                 Row(
                     modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Outlined.Star, contentDescription = null)
+                    Icon(imageVector = Icons.Outlined.Star, contentDescription = null,
+                        modifier = Modifier.size(15.dp))
                     Text(text = "8.4/10 IMDB",
                         modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
-                        fontSize = 15.sp,
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.Normal)
                 }
             }

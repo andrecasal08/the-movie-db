@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 
 class HttpRepository {
 
-    suspend fun getPopularMovies(): Movies {
+    suspend fun getPopularMovies(page: Int=1): Movies {
 
         val httpClient = HttpClient(Android) {
             install(Logging) {
@@ -26,7 +26,8 @@ class HttpRepository {
                 })
             }
         }
-        return httpClient.get("https://api.themoviedb.org/3/movie/popular?api_key=${Keys().moviesApiKey}&language=en-US&page=1").body()
+        return httpClient.get("https://api.themoviedb.org/3/movie/popular?api_key=${Keys().moviesApiKey}&language=en-US&page=${page}" +
+                "").body()
     }
 
     suspend fun getTopRatedMovies(page: Int=1): Movies {
@@ -40,6 +41,7 @@ class HttpRepository {
                 })
             }
         }
+        println("getTopRatedMovies: page: $page")
         return httpClient.get("https://api.themoviedb.org/3/movie/top_rated?api_key=${Keys().moviesApiKey}&language=en-US&page=${page}").body()
     }
 }
