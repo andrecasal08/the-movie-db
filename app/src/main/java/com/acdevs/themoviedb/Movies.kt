@@ -11,6 +11,7 @@ data class Movies(
 
 @Serializable
 data class Results(
+    var id: Int,
     @SerialName("original_language")
     var originalLanguage: String,
     var title: String,
@@ -46,4 +47,16 @@ val movieGenreList = listOf(
     "Thriller" to 53,
     "War" to 10752,
     "Western" to 37
+)
+
+@Serializable
+data class Credits(
+    var id: Int,
+    var credits: List<Cast>
+)
+
+@Serializable
+data class Cast(
+    var id: Int,
+    var name: String,
 )

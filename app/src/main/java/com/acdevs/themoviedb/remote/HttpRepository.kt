@@ -1,5 +1,7 @@
 package com.acdevs.themoviedb.remote
 
+import com.acdevs.themoviedb.Cast
+import com.acdevs.themoviedb.Credits
 import com.acdevs.themoviedb.Keys
 import com.acdevs.themoviedb.Movies
 import io.ktor.client.HttpClient
@@ -43,5 +45,20 @@ class HttpRepository {
         }
         println("getTopRatedMovies: page: $page")
         return httpClient.get("https://api.themoviedb.org/3/movie/top_rated?api_key=${Keys().moviesApiKey}&language=en-US&page=${page}").body()
+    }
+
+    suspend fun getMovieCast(movieId: Int): Credits {
+        val httpClient = HttpClient(Android) {
+            install(Logging) {
+                level = LogLevel.ALL
+            }
+            install(ContentNegotiation){
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+
+        return httpClient.get("https://api.themoviedb.org/3/movie/${movieId}?api_key=${Keys().moviesApiKey}&append_to_response=credits").body()
     }
 }

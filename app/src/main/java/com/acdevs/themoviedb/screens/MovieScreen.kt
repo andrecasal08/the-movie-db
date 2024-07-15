@@ -1,6 +1,8 @@
 package com.acdevs.themoviedb.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -13,7 +15,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -22,34 +30,101 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.ColorUtils
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.acdevs.themoviedb.Results
 import com.acdevs.themoviedb.movieGenreList
+import com.acdevs.themoviedb.viewmodels.HomeViewModel
+import com.acdevs.themoviedb.viewmodels.MovieDetailsViewModel
 import kotlinx.serialization.json.Json
 import kotlin.math.round
 
 @Composable
 fun MovieScreen(modifier: Modifier = Modifier
-    .fillMaxSize(), movieJson: String
+    .fillMaxSize(), movieJson: String, viewModel: MovieDetailsViewModel,
+                navController: NavController
 ) {
     val movie = Json.decodeFromString<Results>(movieJson)
 
+    /*val movieCast = viewModel.movieCast.collectAsState()
+    LaunchedEffect(key1 = movie.id) { // Trigger the effect when movieId changes
+        println("Requesting... movie id: ${movie.id}")
+        viewModel.getMovieCast(movie.id)
+    }*/
+
+    var goBackCounter by remember {
+        mutableIntStateOf(0)
+    }
+    println(goBackCounter)
+
     LazyColumn() {
         item {
-            AsyncImage(
-                model = "https://image.tmdb.org/t/p/original/${movie.posterPath}",
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1.5f),
-                contentScale = ContentScale.FillBounds
-            )
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(0.dp, 30.dp, 0.dp, 0.dp)) {
+                AsyncImage(
+                    model = "https://image.tmdb.org/t/p/original/${movie.posterPath}",
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1.5f),
+                    contentScale = ContentScale.FillBounds
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(
+                        onClick = {
+                            if (goBackCounter==0) {
+                                navController.popBackStack()
+                                goBackCounter++
+                            }
+                        },
+                       // modifier = Modifier.align(Alignment.TopStart) // Position at top-left
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            tint = Color.White,
+                            contentDescription = "Back"
+                        )
+                    }
+
+
+                    IconButton(
+                        onClick = {
+
+                        },
+                       // modifier = Modifier.align(Alignment.TopStart) // Position at top-left
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.FavoriteBorder,
+                            tint = Color.White,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+
+
+            }
         }
         item {
             Row(
@@ -61,9 +136,9 @@ fun MovieScreen(modifier: Modifier = Modifier
                     modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold)
-                IconButton(onClick = { /*TODO*/ }) {
+                /*IconButton(onClick = { *//*TODO*//* }) {
                     Icon(imageVector = Icons.Outlined.Favorite, contentDescription = null)
-                }
+                }*/
             }
         }
 
@@ -120,31 +195,24 @@ fun MovieScreen(modifier: Modifier = Modifier
         }
 
         item {
-            Text(text = "Cast",
-                modifier = Modifier.padding(16.dp, 30.dp, 0.dp, 0.dp),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold)
-        }
-
-        item {
-            LazyRow {
-                items(5) { item ->
-                    Card(
-                        modifier = Modifier.padding(16.dp, 15.dp, 0.dp, 0.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer
-                        ),
-                    ) {
-                        AsyncImage(
-                            model = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Tom_Holland_by_Gage_Skidmore.jpg/640px-Tom_Holland_by_Gage_Skidmore.jpg",
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(100.dp)
-                                .height(100.dp)
-                                .aspectRatio(1.5f),
-                            contentScale = ContentScale.FillBounds
-                        )
-                    }
+            Row(
+                modifier = Modifier
+                    .padding(16.dp, 16.dp, 0.dp, 0.dp)
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "Language")
+                    Text(text = movie.originalLanguage.uppercase(), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "Release Date")
+                    Text(text = movie.releaseDate, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }

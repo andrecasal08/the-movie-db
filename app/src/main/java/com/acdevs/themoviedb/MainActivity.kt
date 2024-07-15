@@ -28,6 +28,7 @@ import com.acdevs.themoviedb.screens.HomeScreenPreview
 import com.acdevs.themoviedb.screens.MovieScreen
 import com.acdevs.themoviedb.ui.theme.TheMovieDBTheme
 import com.acdevs.themoviedb.viewmodels.HomeViewModel
+import com.acdevs.themoviedb.viewmodels.MovieDetailsViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
                 
                 Surface(onClick = { /*TODO*/ }) {
                     val viewModel by viewModels<HomeViewModel>()
+                    val detailsViewModel by viewModels<MovieDetailsViewModel>()
                     //HomeScreen(viewModel = viewModel)
                     //val scope = rememberCoroutineScope()
 
@@ -46,15 +48,12 @@ class MainActivity : ComponentActivity() {
                         composable("home_screen"){
                             HomeScreen(viewModel = viewModel, navController = navController)
                         }
-                        composable("details_screen?movie={title}") {
-
-                        }
                         composable(
                             route = "details_screen?movie={movieJson}",
                             arguments = listOf(navArgument("movieJson") { type = NavType.StringType })
                         ) { backStackEntry ->
                             val movieJson = backStackEntry.arguments?.getString("movieJson") ?: ""
-                            MovieScreen(movieJson = movieJson)
+                            MovieScreen(movieJson = movieJson, viewModel=detailsViewModel, navController = navController)
                         }
                     }
 

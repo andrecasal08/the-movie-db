@@ -59,7 +59,7 @@ fun HomeScreen(viewModel: HomeViewModel,
             fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(20.dp))
 
-        PopularMovies(movies = viewModel.popularMovies)
+        PopularMovies(movies = viewModel.popularMovies, navController = navController)
 
         Text(text = "Top Rated Movies", modifier = Modifier.padding(16.dp, 30.dp, 0.dp, 0.dp),
             fontSize = 24.sp,
@@ -72,7 +72,7 @@ fun HomeScreen(viewModel: HomeViewModel,
 }
 
 @Composable
-fun PopularMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Results>>) {
+fun PopularMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Results>>, navController: NavController) {
     val movieListItems: LazyPagingItems<Results> = movies.collectAsLazyPagingItems()
     LazyRow {
         items(
@@ -83,7 +83,7 @@ fun PopularMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Results
                 index ->
             val movie = movieListItems[index]
             if (movie != null) {
-                PopularMoviesCard(movie = movie)
+                PopularMoviesCard(movie = movie, navController = navController)
             }
         }
     }
@@ -109,14 +109,15 @@ fun TopRatedMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Result
 }
 
 @Composable
-fun PopularMoviesCard(modifier: Modifier = Modifier, movie: Results) {
+fun PopularMoviesCard(modifier: Modifier = Modifier, movie: Results, navController: NavController) {
     Card(
         modifier = Modifier.padding(16.dp, 15.dp, 16.dp, 0.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         ),
         onClick = {
-
+            val movieJson = Json.encodeToString(movie)
+            navController.navigate("details_screen?movie=${movieJson}")
         },
 
         ) {
@@ -160,11 +161,8 @@ fun TopRatedMoviesCard(movie: Results, navController: NavController) {
             containerColor = Color.Transparent
         ),
         onClick = {
-            //MovieScreen()
-            //navController.navigate("details_screen?movie=${movie.title}")
             val movieJson = Json.encodeToString(movie)
             navController.navigate("details_screen?movie=${movieJson}")
-
         },
 
         ) {
