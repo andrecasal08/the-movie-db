@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -28,14 +29,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.acdevs.themoviedb.Results
+import com.acdevs.themoviedb.movieGenreList
+import kotlinx.serialization.json.Json
+import kotlin.math.round
 
 @Composable
 fun MovieScreen(modifier: Modifier = Modifier
-    .fillMaxSize()) {
+    .fillMaxSize(), movieJson: String
+) {
+    val movie = Json.decodeFromString<Results>(movieJson)
+
     LazyColumn() {
         item {
             AsyncImage(
-                model = "https://www.adrenaline.com.br/wp-content/uploads/2023/09/marvels-spiderman-remastered-912x569.jpg",
+                model = "https://image.tmdb.org/t/p/original/${movie.posterPath}",
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -49,7 +57,7 @@ fun MovieScreen(modifier: Modifier = Modifier
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Popular Movies",
+                Text(text = movie.title,
                     modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold)
@@ -62,26 +70,36 @@ fun MovieScreen(modifier: Modifier = Modifier
         item {
             Row(
                 modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(imageVector = Icons.Outlined.Star, contentDescription = null)
-                Text(text = "8.4/10",
+                Icon(imageVector = Icons.Outlined.Star, contentDescription = null,
+                    modifier = Modifier.size(15.dp))
+                val voteAverage = "%.1f".format(movie.voteAverage)
+                Text(text = "${voteAverage}/10 IMDB",
                     modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
-                    fontSize = 15.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Normal)
             }
         }
 
         item {
-            LazyRow {
-                items(5) { item ->
-                    Card(
-                        modifier = Modifier.padding(16.dp, 15.dp, 0.dp, 0.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer
-                        ),
-                    ) {
-                        Text(text = "category",
-                            fontSize = 15.sp, modifier = Modifier.padding(3.dp, 3.dp, 3.dp, 3.dp))
+            LazyRow(
+                modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp)
+            ) {
+                movieGenreList.forEach { (genre, value) ->
+                    if (movie.genreIds.contains(value)) {
+                        item {
+                            Card(
+                                modifier = Modifier.padding(0.dp, 5.dp, 5.dp, 5.dp),
+                                colors = CardDefaults.cardColors(
+
+                                ),
+                            ) {
+                                Text(text = genre, fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    modifier = Modifier.padding(10.dp, 1.dp, 10.dp, 1.dp))
+                            }
+                        }
                     }
                 }
             }
@@ -95,7 +113,7 @@ fun MovieScreen(modifier: Modifier = Modifier
         }
 
         item {
-            Text(text = "asdasdasdasdasdasdasasdasdasdasdasdasdasasdasdasdasdasdasdasasdasdasdasdasdasdasasdasdasdasdasdasdasasdasdasdasdasdasdasasdasdasdasdasdasdasasdasdasdasdasdasdasasdasdasdasdasdasdas",
+            Text(text = movie.overview,
                 modifier = Modifier.padding(16.dp),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Normal)

@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -38,11 +39,14 @@ import com.acdevs.themoviedb.Results
 import com.acdevs.themoviedb.movieGenreList
 import com.acdevs.themoviedb.viewmodels.HomeViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlin.math.round
 
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel,
-               modifier: Modifier = Modifier.fillMaxSize()) {
+               modifier: Modifier = Modifier.fillMaxSize(), navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -62,7 +66,7 @@ fun HomeScreen(viewModel: HomeViewModel,
             fontWeight = FontWeight.Bold)
 
         Spacer(modifier = Modifier.height(20.dp))
-        TopRatedMovies(movies = viewModel.topRatedMovies)
+        TopRatedMovies(movies = viewModel.topRatedMovies, navController = navController)
     }
 
 }
@@ -86,7 +90,7 @@ fun PopularMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Results
 }
 
 @Composable
-fun TopRatedMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Results>>) {
+fun TopRatedMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Results>>, navController: NavController) {
     val movieListItems: LazyPagingItems<Results> = movies.collectAsLazyPagingItems()
 
   LazyColumn {
@@ -98,7 +102,7 @@ fun TopRatedMovies(modifier: Modifier = Modifier, movies: Flow<PagingData<Result
           index ->
           val movie = movieListItems[index]
           if (movie != null) {
-              TopRatedMoviesCard(movie = movie)
+              TopRatedMoviesCard(movie = movie, navController = navController)
           }
       }
   }
@@ -136,7 +140,8 @@ fun PopularMoviesCard(modifier: Modifier = Modifier, movie: Results) {
             ) {
                 Icon(imageVector = Icons.Outlined.Star, contentDescription = null,
                     modifier = Modifier.size(15.dp))
-                Text(text = "8.4/10 IMDB",
+                val voteAverage = "%.1f".format(movie.voteAverage)
+                Text(text = "${voteAverage}/10 IMDB",
                     modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal)
@@ -146,7 +151,7 @@ fun PopularMoviesCard(modifier: Modifier = Modifier, movie: Results) {
 }
 
 @Composable
-fun TopRatedMoviesCard(movie: Results) {
+fun TopRatedMoviesCard(movie: Results, navController: NavController) {
     Card(
         modifier = Modifier
             .padding(16.dp, 15.dp, 16.dp, 0.dp)
@@ -155,6 +160,10 @@ fun TopRatedMoviesCard(movie: Results) {
             containerColor = Color.Transparent
         ),
         onClick = {
+            //MovieScreen()
+            //navController.navigate("details_screen?movie=${movie.title}")
+            val movieJson = Json.encodeToString(movie)
+            navController.navigate("details_screen?movie=${movieJson}")
 
         },
 
@@ -183,7 +192,8 @@ fun TopRatedMoviesCard(movie: Results) {
                 ) {
                     Icon(imageVector = Icons.Outlined.Star, contentDescription = null,
                         modifier = Modifier.size(15.dp))
-                    Text(text = "8.4/10 IMDB",
+                    val voteAverage = "%.1f".format(movie.voteAverage)
+                    Text(text = "${voteAverage}/10 IMDB",
                         modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal)

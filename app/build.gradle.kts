@@ -84,4 +84,8 @@ dependencies {
     implementation("androidx.paging:paging-compose:3.3.0-alpha05")
 
     implementation("androidx.compose.foundation:foundation:1.6.8")
+
+    val nav_version = "2.7.7"
+
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 }
