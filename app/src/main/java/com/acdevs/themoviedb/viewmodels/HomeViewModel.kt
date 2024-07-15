@@ -9,18 +9,31 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel: ViewModel() {
-    private val _characterData = MutableStateFlow<Movies?>(null)
-    val characterData = _characterData.asStateFlow()
+    private val _popularMoviesData = MutableStateFlow<Movies?>(null)
+    val popularMoviesData = _popularMoviesData.asStateFlow()
     private val repository = HttpRepository()
+
+    private val _topRatedMoviesData = MutableStateFlow<Movies?>(null)
+    val topRatedMoviesData = _topRatedMoviesData.asStateFlow()
 
     init {
         viewModelScope.launch {
             kotlin.runCatching {
                 repository.getPopularMovies()
             }.onSuccess {
-                _characterData.value = it
+                _popularMoviesData.value = it
             }.onFailure {
-                _characterData.value = null
+                _popularMoviesData.value = null
+            }
+        }
+
+        viewModelScope.launch {
+            kotlin.runCatching {
+                repository.getTopRatedMovies()
+            }.onSuccess {
+                _topRatedMoviesData.value = it
+            }.onFailure {
+                _topRatedMoviesData.value = null
             }
         }
     }

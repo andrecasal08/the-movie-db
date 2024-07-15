@@ -78,4 +78,10 @@ dependencies {
 
     // url to image
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // lazy pagination
+    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
+    implementation("androidx.paging:paging-compose:3.3.0-alpha05")
+
+    implementation("androidx.compose.foundation:foundation:1.6.8")
 }
