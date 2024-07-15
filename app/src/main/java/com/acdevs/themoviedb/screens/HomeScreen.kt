@@ -35,6 +35,7 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.acdevs.themoviedb.Results
+import com.acdevs.themoviedb.movieGenreList
 import com.acdevs.themoviedb.viewmodels.HomeViewModel
 import kotlinx.coroutines.flow.Flow
 
@@ -44,7 +45,9 @@ fun HomeScreen(viewModel: HomeViewModel,
                modifier: Modifier = Modifier.fillMaxSize()) {
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(0.dp, 30.dp, 0.dp, 0.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(0.dp, 30.dp, 0.dp, 0.dp)
     ) {
         Text(text = "Popular Movies",
             modifier = Modifier.padding(16.dp, 30.dp, 0.dp, 0.dp),
@@ -185,11 +188,35 @@ fun TopRatedMoviesCard(movie: Results) {
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal)
                 }
+                LazyRow(
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    item {
+                        GenreListCard(genres = movie.genreIds)
+                    }
+                }
             }
         }
     }
 }
 
+@Composable
+fun GenreListCard(modifier: Modifier = Modifier, genres: List<Int>) {
+    movieGenreList.forEach { (genre, value) ->
+        if (genres.contains(value)) {
+            Card(
+                modifier = Modifier.padding(0.dp, 5.dp, 5.dp, 5.dp),
+                colors = CardDefaults.cardColors(
+
+                ),
+            ) {
+                Text(text = genre, fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.padding(10.dp, 1.dp, 10.dp, 1.dp))
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
