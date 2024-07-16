@@ -92,6 +92,7 @@ fun MovieScreen(modifier: Modifier = Modifier
                 }
             )
         },
+        bottomBar = {},
         containerColor = Color.White
     ) { innerPadding ->
 
