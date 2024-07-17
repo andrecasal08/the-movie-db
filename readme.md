@@ -16,12 +16,6 @@ This is a simple project to display movies from TMDB in the app and store your f
 - Lazy Pagination
 - Room
 
-### Demo Video
-
-[![Watch the video](# The Movie DB
-
-This is a simple project to display movies from TMDB in the app and store your favorite ones!
-
 ### Functionalities
 
 - Request Popular and Top Rated Movies
