@@ -140,7 +140,8 @@ fun FavoriteMoviesCard(movie: Results, navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(imageVector = Icons.Outlined.Star, contentDescription = null,
-                        modifier = Modifier.size(15.dp))
+                        modifier = Modifier.size(15.dp),
+                        tint = Color(255, 250, 94, 255))
                     val voteAverage = "%.1f".format(movie.voteAverage)
                     Text(text = "${voteAverage}/10 IMDB",
                         modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),

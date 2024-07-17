@@ -103,4 +103,6 @@ dependencies {
     //ksp("androidx.room:room-compiler:$room_version")
 
     // Splash
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }

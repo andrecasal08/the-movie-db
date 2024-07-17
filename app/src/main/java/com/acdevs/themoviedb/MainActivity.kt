@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavType
@@ -20,6 +21,7 @@ import com.acdevs.themoviedb.screens.MovieScreen
 import com.acdevs.themoviedb.ui.theme.TheMovieDBTheme
 import com.acdevs.themoviedb.viewmodels.FavoriteMoviesViewModel
 import com.acdevs.themoviedb.viewmodels.HomeViewModel
+import com.acdevs.themoviedb.viewmodels.MainViewModel
 import com.acdevs.themoviedb.viewmodels.MovieDetailsViewModel
 
 class MainActivity : ComponentActivity() {
@@ -32,8 +34,16 @@ class MainActivity : ComponentActivity() {
         ).build()
     }
 
+    private val viewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                !viewModel.isReady.value
+            }
+        }
+
         enableEdgeToEdge()
         setContent {
             TheMovieDBTheme {
