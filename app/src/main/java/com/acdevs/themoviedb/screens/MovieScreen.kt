@@ -1,11 +1,13 @@
 package com.acdevs.themoviedb.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,7 +45,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
@@ -151,38 +155,42 @@ fun MovieScreen(modifier: Modifier = Modifier
             }
             item {
                 Row(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxHeight().fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(text = movie.title,
-                        modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
+                        modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp).weight(1f), // Allow text to take available space,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        fontFamily = AppFont.poppinsFont)
-
-                    println("antes")
+                        fontFamily = AppFont.poppinsFont,
+                        overflow = TextOverflow.Ellipsis, // Add ellipsis if text overflows
+                        maxLines = 2)
 
                     var movieExists = viewModel.verifyMovieExistence(movie.title).collectAsState(
                         initial = false
                     )
-                    println("depois")
-                    println(movieExists)
 
+                    var context = LocalContext.current
                     if (movieExists.value != null) {
                         IconButton(onClick = {
                             viewModel.deleteMovie(movieJson)
-                        }) {
-                            Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
+                            Toast.makeText(context, "Movie removed from favorites", Toast.LENGTH_SHORT).show()
+                        },
+                            modifier = Modifier.align(Alignment.CenterVertically).padding(16.dp, 16.dp, 0.dp, 0.dp).weight(0.2f)) {
+                            Icon(imageVector = Icons.Filled.Favorite, contentDescription = null,
+                                tint = Color(0, 43, 63, 255))
                         }
-                        println("existe nos favoritos")
-                    } else {
+                    }
+                    else {
                         IconButton(onClick = {
                             viewModel.insertMovie(movieJson)
-                        }) {
-                            Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null)
+                            Toast.makeText(context, "Movie added to favorites", Toast.LENGTH_SHORT).show()
+                        },
+                            modifier = Modifier.align(Alignment.CenterVertically).padding(16.dp, 16.dp, 0.dp, 0.dp).weight(0.2f)) {
+                            Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null,
+                                tint = Color(0, 43, 63, 255))
                         }
-                        println("não existe nos favoritos")
                     }
 
                     
@@ -192,11 +200,13 @@ fun MovieScreen(modifier: Modifier = Modifier
 
             item {
                 Row(
-                    modifier = Modifier.padding(20.dp, 10.dp, 0.dp, 0.dp),
+                    modifier = Modifier.padding(20.dp, 5.dp, 0.dp, 0.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(imageVector = Icons.Outlined.Star, contentDescription = null,
-                        modifier = Modifier.size(15.dp))
+                        modifier = Modifier.size(15.dp),
+                        tint = Color(255, 250, 94, 255)
+                    )
                     val voteAverage = "%.1f".format(movie.voteAverage)
                     Text(text = "${voteAverage}/10 IMDB",
                         modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
@@ -209,7 +219,7 @@ fun MovieScreen(modifier: Modifier = Modifier
 
             item {
                 LazyRow(
-                    modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp)
+                    modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 0.dp)
                 ) {
                     movieGenreList.forEach { (genre, value) ->
                         if (movie.genreIds.contains(value)) {

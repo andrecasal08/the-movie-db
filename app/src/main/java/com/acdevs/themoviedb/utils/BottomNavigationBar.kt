@@ -1,5 +1,9 @@
 package com.acdevs.themoviedb.utils
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -8,6 +12,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,8 +20,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.navigation.NavController
 
 var selectedItemIndex = mutableIntStateOf(0).value
@@ -43,11 +52,22 @@ fun BottomNavigationBar(modifier: Modifier = Modifier, navController: NavControl
 
 
 
-    NavigationBar {
+    NavigationBar(
+        contentColor = Color.White, // tap background color
+        containerColor =  Color.White, // tap background color
+        modifier = modifier.height(100.dp)
+    ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
-                alwaysShowLabel = true,
-                label = { Text(text = item.title) },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor =  Color.White,
+                    selectedTextColor = Color.Black,
+                    unselectedTextColor = Color.Black,
+                    selectedIconColor =  Color(0, 43, 63, 255),
+                    unselectedIconColor =  Color(0, 43, 63, 255)
+                ),
+                alwaysShowLabel = false,
+                //label = { Text(text = item.title, color = Color.White) },
                 selected = selectedItemIndex == index,
                 onClick = {
                     selectedItemIndex = index
@@ -55,14 +75,14 @@ fun BottomNavigationBar(modifier: Modifier = Modifier, navController: NavControl
                 },
                 icon = {
                     Icon(
+
                         imageVector = if (selectedItemIndex == index) {
                             item.selectedIcon
                         } else {
                             item.unselectedIcon
                         }, contentDescription = item.title
                     )
-                }
-            )
+                })
         }
     }
 }

@@ -97,27 +97,6 @@ fun FavoritesScreen(modifier: Modifier = Modifier,
     }
 }
 
-
-/*
-items(dataList.value) { item ->
-                var result = Results(
-                    originalLanguage = item.originalLanguage,
-                    overview = item.overview,
-                    posterPath = item.posterPath,
-                    releaseDate = item.releaseDate,
-                    title = item.title,
-                    voteAverage = item.voteAverage,
-                    genreIds = emptyList(),
-                    popularity = 0.0,
-                    id = 0
-                )
-                FavoriteMoviesCard(movie = result, navController = navController)
-            }
-            
-*
-*
-* */
-
 @Composable
 fun FavoriteMoviesCard(movie: Results, navController: NavController) {
     Card(
