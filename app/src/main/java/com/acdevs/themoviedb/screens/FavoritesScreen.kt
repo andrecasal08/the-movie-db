@@ -64,13 +64,31 @@ fun FavoritesScreen(modifier: Modifier = Modifier,
     ) {
         Surface(
             color = Color.White,
-            modifier = Modifier.padding(0.dp, it.calculateTopPadding(), 0.dp, it.calculateBottomPadding()+10.dp).fillMaxSize()
+            modifier = Modifier
+                .padding(0.dp, it.calculateTopPadding(), 0.dp, it.calculateBottomPadding() + 10.dp)
+                .fillMaxSize()
         ) {
             val dataList = viewModel.getFavoriteMovies().collectAsState(initial = emptyList())
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
+                println(dataList.value)
+                if (dataList.value.isEmpty()) {
+                    item {
+                        Column(
+                            modifier = Modifier.fillParentMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(text = "No movies found.",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontFamily = AppFont.poppinsFont,
+                                color = Color.Black.copy(alpha = 0.7f))
+                        }
+                    }
+                }
                 items(dataList.value) { item ->
 
                     var genres = emptyList<Int>()
