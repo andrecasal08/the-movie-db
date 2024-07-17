@@ -160,9 +160,11 @@ fun MovieScreen(modifier: Modifier = Modifier
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = AppFont.poppinsFont)
-                    /*IconButton(onClick = { *//*TODO*//* }) {
-                    Icon(imageVector = Icons.Outlined.Favorite, contentDescription = null)
-                }*/
+                    IconButton(onClick = {
+                        viewModel.insertMovie(movieJson)
+                    }) {
+                        Icon(imageVector = Icons.Outlined.Favorite, contentDescription = null)
+                    }
                 }
             }
 

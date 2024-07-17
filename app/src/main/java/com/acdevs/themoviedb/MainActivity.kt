@@ -5,12 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.room.Room
+import com.acdevs.themoviedb.local.MoviesDatabase
 import com.acdevs.themoviedb.screens.FavoritesScreen
 import com.acdevs.themoviedb.screens.HomeScreen
 import com.acdevs.themoviedb.screens.MovieScreen
@@ -19,7 +22,14 @@ import com.acdevs.themoviedb.viewmodels.HomeViewModel
 import com.acdevs.themoviedb.viewmodels.MovieDetailsViewModel
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+
+    private val database by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            MoviesDatabase::class.java, "movies.db"
+        ).build()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,9 +37,18 @@ class MainActivity : ComponentActivity() {
             TheMovieDBTheme {
 
                 val viewModel by viewModels<HomeViewModel>()
-                val detailsViewModel by viewModels<MovieDetailsViewModel>()
-                //HomeScreen(viewModel = viewModel)
-                //val scope = rememberCoroutineScope()
+                //val detailsViewModel by viewModels<MovieDetailsViewModel>()
+
+                val detailsViewModel by viewModels<MovieDetailsViewModel> (
+                    factoryProducer = {
+                        object : ViewModelProvider.Factory {
+                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                return MovieDetailsViewModel(database.moviesDao) as T
+                            }
+                        }
+                    }
+                )
+
 
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "home_screen") {

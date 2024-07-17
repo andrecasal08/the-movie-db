@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("plugin.serialization") version "1.9.0"
+    id("com.google.devtools.ksp")
+    id("kotlin-kapt")
 }
 
 android {
@@ -68,6 +70,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Requests
     val ktorVersion = "2.3.2"
     implementation("io.ktor:ktor-client-android:$ktorVersion")
     implementation("io.ktor:ktor-client-logging:$ktorVersion")
@@ -76,19 +79,26 @@ dependencies {
     implementation("org.slf4j:slf4j-android:1.7.36")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
-    // url to image
+    // Coin
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     // lazy pagination
     implementation(platform("androidx.compose:compose-bom:2024.06.00"))
     implementation("androidx.paging:paging-compose:3.3.0-alpha05")
-
     implementation("androidx.compose.foundation:foundation:1.6.8")
 
+    // Navigation
     val nav_version = "2.7.7"
-
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     // Google Fonts
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.8")
+
+    // Room
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    //annotationProcessor("androidx.room:room-compiler:$room_version")
+    //ksp("androidx.room:room-compiler:$room_version")
 }

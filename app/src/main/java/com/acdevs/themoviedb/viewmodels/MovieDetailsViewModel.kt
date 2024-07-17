@@ -2,14 +2,19 @@ package com.acdevs.themoviedb.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.acdevs.themoviedb.Cast
 import com.acdevs.themoviedb.Credits
+import com.acdevs.themoviedb.Results
+import com.acdevs.themoviedb.local.MoviesDao
+import com.acdevs.themoviedb.local.MoviesEntity
 import com.acdevs.themoviedb.remote.HttpRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
-class MovieDetailsViewModel: ViewModel() {
+class MovieDetailsViewModel(
+    private val moviesDao: MoviesDao
+) : ViewModel() {
     private val repository = HttpRepository()
     private val _movieCast = MutableStateFlow<Credits?>(null)
     val movieCast = _movieCast.asStateFlow()
@@ -26,6 +31,22 @@ class MovieDetailsViewModel: ViewModel() {
             println(throwable.message)
             println("error")
             _movieCast.value = null
+        }
+    }
+
+    fun insertMovie(movieJson: String) {
+        val movie = Json.decodeFromString<Results>(movieJson)
+        val movieEntity = MoviesEntity(
+            title = movie.title,
+            overview = movie.overview,
+            posterPath = movie.posterPath,
+            releaseDate = movie.releaseDate,
+            voteAverage = movie.voteAverage.toString(),
+            originalLanguage = movie.originalLanguage,
+            genreIds = movie.genreIds.joinToString(","),
+        )
+        viewModelScope.launch {
+            moviesDao.insertMovie(movieEntity)
         }
     }
 }
