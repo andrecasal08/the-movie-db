@@ -11,9 +11,13 @@ interface MoviesDao {
     @Insert
     suspend fun insertMovie(moviesEntity: MoviesEntity)
 
-    @Delete
-    suspend fun deleteMovie(moviesEntity: MoviesEntity)
+    @Query("DELETE FROM movies_table WHERE title = :title")
+    suspend fun deleteMovie(title: String)
 
     @Query("SELECT * FROM movies_table")
     fun getAllMovies(): Flow<List<MoviesEntity>>
+
+    @Query("SELECT * FROM movies_table WHERE title = :title")
+    fun getMovieByTitle(title: String): Flow<MoviesEntity>
+
 }

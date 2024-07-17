@@ -160,11 +160,33 @@ fun MovieScreen(modifier: Modifier = Modifier
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = AppFont.poppinsFont)
-                    IconButton(onClick = {
-                        viewModel.insertMovie(movieJson)
-                    }) {
-                        Icon(imageVector = Icons.Outlined.Favorite, contentDescription = null)
+
+                    println("antes")
+
+                    var movieExists = viewModel.verifyMovieExistence(movie.title).collectAsState(
+                        initial = false
+                    )
+                    println("depois")
+                    println(movieExists)
+
+                    if (movieExists.value != null) {
+                        IconButton(onClick = {
+                            viewModel.deleteMovie(movieJson)
+                        }) {
+                            Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
+                        }
+                        println("existe nos favoritos")
+                    } else {
+                        IconButton(onClick = {
+                            viewModel.insertMovie(movieJson)
+                        }) {
+                            Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null)
+                        }
+                        println("não existe nos favoritos")
                     }
+
+                    
+
                 }
             }
 

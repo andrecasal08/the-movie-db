@@ -1,5 +1,6 @@
 package com.acdevs.themoviedb.viewmodels
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acdevs.themoviedb.Credits
@@ -7,13 +8,14 @@ import com.acdevs.themoviedb.Results
 import com.acdevs.themoviedb.local.MoviesDao
 import com.acdevs.themoviedb.local.MoviesEntity
 import com.acdevs.themoviedb.remote.HttpRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class MovieDetailsViewModel(
-    private val moviesDao: MoviesDao
+    private val moviesDao: MoviesDao,
 ) : ViewModel() {
     private val repository = HttpRepository()
     private val _movieCast = MutableStateFlow<Credits?>(null)
@@ -48,5 +50,16 @@ class MovieDetailsViewModel(
         viewModelScope.launch {
             moviesDao.insertMovie(movieEntity)
         }
+    }
+
+    fun deleteMovie(movieJson: String) {
+        val movie = Json.decodeFromString<Results>(movieJson)
+        viewModelScope.launch {
+            moviesDao.deleteMovie(movie.title)
+        }
+    }
+
+    fun verifyMovieExistence(movie: String): Flow<MoviesEntity> {
+        return moviesDao.getMovieByTitle(movie)
     }
 }

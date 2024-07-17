@@ -18,6 +18,7 @@ import com.acdevs.themoviedb.screens.FavoritesScreen
 import com.acdevs.themoviedb.screens.HomeScreen
 import com.acdevs.themoviedb.screens.MovieScreen
 import com.acdevs.themoviedb.ui.theme.TheMovieDBTheme
+import com.acdevs.themoviedb.viewmodels.FavoriteMoviesViewModel
 import com.acdevs.themoviedb.viewmodels.HomeViewModel
 import com.acdevs.themoviedb.viewmodels.MovieDetailsViewModel
 
@@ -49,6 +50,16 @@ class MainActivity : ComponentActivity() {
                     }
                 )
 
+                val favoriteMoviesViewModel by viewModels<FavoriteMoviesViewModel> (
+                    factoryProducer = {
+                        object : ViewModelProvider.Factory {
+                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                return FavoriteMoviesViewModel(database.moviesDao) as T
+                            }
+                        }
+                    }
+                )
+
 
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "home_screen") {
@@ -63,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         MovieScreen(movieJson = movieJson, viewModel=detailsViewModel, navController = navController)
                     }
                     composable("favorites_screen") {
-                        FavoritesScreen(navController = navController)
+                        FavoritesScreen(navController = navController, viewModel=favoriteMoviesViewModel)
                     }
                 }
 
