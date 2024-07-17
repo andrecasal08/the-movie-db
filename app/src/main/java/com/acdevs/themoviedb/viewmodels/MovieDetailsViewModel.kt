@@ -43,7 +43,7 @@ class MovieDetailsViewModel(
             overview = movie.overview,
             posterPath = movie.posterPath,
             releaseDate = movie.releaseDate,
-            voteAverage = movie.voteAverage.toString(),
+            voteAverage = movie.voteAverage,
             originalLanguage = movie.originalLanguage,
             genreIds = movie.genreIds.joinToString(","),
         )

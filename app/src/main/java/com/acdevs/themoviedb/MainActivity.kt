@@ -25,9 +25,10 @@ import com.acdevs.themoviedb.viewmodels.MovieDetailsViewModel
 class MainActivity : ComponentActivity() {
 
     private val database by lazy {
+
         Room.databaseBuilder(
             applicationContext,
-            MoviesDatabase::class.java, "movies.db"
+            MoviesDatabase::class.java, "favorite_movies.db"
         ).build()
     }
 
