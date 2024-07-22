@@ -1,4 +1,4 @@
-package com.acdevs.themoviedb.utils
+package com.acdevs.themoviedb.utilities
 
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily

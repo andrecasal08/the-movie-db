@@ -1,4 +1,4 @@
-package com.acdevs.themoviedb
+package com.acdevs.themoviedb.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

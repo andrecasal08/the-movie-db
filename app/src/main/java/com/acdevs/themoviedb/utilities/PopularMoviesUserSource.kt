@@ -1,13 +1,13 @@
-package com.acdevs.themoviedb.utils
+package com.acdevs.themoviedb.utilities
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import coil.network.HttpException
-import com.acdevs.themoviedb.Results
-import com.acdevs.themoviedb.remote.HttpRepository
+import com.acdevs.themoviedb.data.Results
+import com.acdevs.themoviedb.network.HttpRepository
 import okio.IOException
 
-class TopRatedMoviesUserSource: PagingSource<Int, Results>() {
+class PopularMoviesUserSource: PagingSource<Int, Results>() {
     override fun getRefreshKey(state: PagingState<Int, Results>): Int? {
         return state.anchorPosition
     }
@@ -16,12 +16,12 @@ class TopRatedMoviesUserSource: PagingSource<Int, Results>() {
         val repository = HttpRepository()
         return try {
             val nextPage = params.key ?: 1
-            val topRatedMoviesList = repository.getTopRatedMovies(nextPage)
+            val popularMoviesList = repository.getPopularMovies(nextPage)
 
             LoadResult.Page(
-                data = topRatedMoviesList.results,
+                data = popularMoviesList.results,
                 prevKey = if (nextPage == 1) null else nextPage - 1,
-                nextKey = topRatedMoviesList.page.plus(1)
+                nextKey = popularMoviesList.page.plus(1)
             )
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
@@ -29,4 +29,5 @@ class TopRatedMoviesUserSource: PagingSource<Int, Results>() {
             return LoadResult.Error(exception)
         }
     }
+
 }

@@ -2,7 +2,7 @@ package com.acdevs.themoviedb.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.acdevs.themoviedb.Results
+import com.acdevs.themoviedb.data.Results
 import com.acdevs.themoviedb.local.MoviesDao
 import com.acdevs.themoviedb.local.MoviesEntity
 import kotlinx.coroutines.flow.Flow

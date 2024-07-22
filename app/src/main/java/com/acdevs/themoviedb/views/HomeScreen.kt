@@ -1,4 +1,4 @@
-package com.acdevs.themoviedb.screens
+package com.acdevs.themoviedb.views
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,14 +37,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
-import com.acdevs.themoviedb.Results
-import com.acdevs.themoviedb.movieGenreList
-import com.acdevs.themoviedb.utils.AppFont
-import com.acdevs.themoviedb.utils.BottomNavigationBar
-import com.acdevs.themoviedb.utils.NavigationTopBar
-import com.acdevs.themoviedb.utils.cardBackgroundColor
-import com.acdevs.themoviedb.utils.cardTextColor
-import com.acdevs.themoviedb.utils.textTitleColor
+import com.acdevs.themoviedb.data.Results
+import com.acdevs.themoviedb.data.movieGenreList
+import com.acdevs.themoviedb.utilities.AppFont
+import com.acdevs.themoviedb.utilities.BottomNavigationBar
+import com.acdevs.themoviedb.utilities.NavigationTopBar
+import com.acdevs.themoviedb.utilities.cardBackgroundColor
+import com.acdevs.themoviedb.utilities.cardTextColor
+import com.acdevs.themoviedb.utilities.textTitleColor
 import com.acdevs.themoviedb.viewmodels.HomeViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString

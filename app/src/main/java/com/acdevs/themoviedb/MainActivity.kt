@@ -15,9 +15,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.room.Room
 import com.acdevs.themoviedb.local.MoviesDatabase
-import com.acdevs.themoviedb.screens.FavoritesScreen
-import com.acdevs.themoviedb.screens.HomeScreen
-import com.acdevs.themoviedb.screens.MovieScreen
+import com.acdevs.themoviedb.views.FavoritesScreen
+import com.acdevs.themoviedb.views.HomeScreen
+import com.acdevs.themoviedb.views.MovieScreen
 import com.acdevs.themoviedb.ui.theme.TheMovieDBTheme
 import com.acdevs.themoviedb.viewmodels.FavoriteMoviesViewModel
 import com.acdevs.themoviedb.viewmodels.HomeViewModel

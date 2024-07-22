@@ -1,10 +1,8 @@
-package com.acdevs.themoviedb.screens
+package com.acdevs.themoviedb.views
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,12 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.acdevs.themoviedb.Results
-import com.acdevs.themoviedb.local.MoviesEntity
-import com.acdevs.themoviedb.utils.AppFont
-import com.acdevs.themoviedb.utils.BottomNavigationBar
-import com.acdevs.themoviedb.utils.NavigationTopBar
-import com.acdevs.themoviedb.utils.textTitleColor
+import com.acdevs.themoviedb.data.Results
+import com.acdevs.themoviedb.utilities.AppFont
+import com.acdevs.themoviedb.utilities.BottomNavigationBar
+import com.acdevs.themoviedb.utilities.NavigationTopBar
 import com.acdevs.themoviedb.viewmodels.FavoriteMoviesViewModel
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

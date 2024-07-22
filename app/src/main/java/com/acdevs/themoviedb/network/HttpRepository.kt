@@ -1,8 +1,8 @@
-package com.acdevs.themoviedb.remote
+package com.acdevs.themoviedb.network
 
-import com.acdevs.themoviedb.Credits
+import com.acdevs.themoviedb.data.Credits
 import com.acdevs.themoviedb.Keys
-import com.acdevs.themoviedb.Movies
+import com.acdevs.themoviedb.data.Movies
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
