@@ -29,5 +29,4 @@ class TopRatedMoviesUserSource: PagingSource<Int, Results>() {
             return LoadResult.Error(exception)
         }
     }
-
 }

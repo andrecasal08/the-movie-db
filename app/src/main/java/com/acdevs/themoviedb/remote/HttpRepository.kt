@@ -1,6 +1,5 @@
 package com.acdevs.themoviedb.remote
 
-import com.acdevs.themoviedb.Cast
 import com.acdevs.themoviedb.Credits
 import com.acdevs.themoviedb.Keys
 import com.acdevs.themoviedb.Movies

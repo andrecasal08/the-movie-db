@@ -179,7 +179,7 @@ fun MovieScreen(modifier: Modifier = Modifier
                         },
                             modifier = Modifier.align(Alignment.CenterVertically).padding(16.dp, 16.dp, 0.dp, 0.dp).weight(0.2f)) {
                             Icon(imageVector = Icons.Filled.Favorite, contentDescription = null,
-                                tint = Color(0, 43, 63, 255))
+                                tint = textTitleColor)
                         }
                     }
                     else {
@@ -189,7 +189,7 @@ fun MovieScreen(modifier: Modifier = Modifier
                         },
                             modifier = Modifier.align(Alignment.CenterVertically).padding(16.dp, 16.dp, 0.dp, 0.dp).weight(0.2f)) {
                             Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null,
-                                tint = Color(0, 43, 63, 255))
+                                tint = textTitleColor)
                         }
                     }
 
