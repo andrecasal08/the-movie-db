@@ -172,7 +172,17 @@ fun PopularMoviesCard(modifier: Modifier = Modifier, movie: Results, navControll
         ),
         onClick = {
             val movieJson = Json.encodeToString(movie)
-            navController.navigate("details_screen?movie=${movieJson}")
+            println("moviejson: $movieJson")
+
+            if (hasOneAmpersand(movie.title)) {
+                println("The title has exactly one ampersand.")
+            } else {
+                println("The title does not have exactly one ampersand.")
+            }
+
+            val escapedJsonString = movieJson.replace("&", "and")
+
+            navController.navigate("details_screen?movie=${escapedJsonString}")
         },
 
         ) {
@@ -304,6 +314,10 @@ fun GenreListCard(modifier: Modifier = Modifier, genres: List<Int>) {
 @Composable
 fun HomeScreenPreview() {
 
+}
+
+fun hasOneAmpersand(title: String): Boolean {
+    return title.count { it == '&' } == 1
 }
 
 /*
