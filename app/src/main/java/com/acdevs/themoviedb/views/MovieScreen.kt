@@ -88,7 +88,9 @@ fun MovieScreen(modifier: Modifier = Modifier
         containerColor = Color.White
     ) { innerPadding ->
 
-        LazyColumn() {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding())
+        ) {
             item {
                 Box(modifier = Modifier
                     .fillMaxSize()
